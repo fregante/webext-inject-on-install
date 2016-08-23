@@ -1,0 +1,36 @@
+{
+  "name": "webext-inject-on-install",
+  "version": "0.0.0",
+  "description": "Automatically add content scripts to existing tabs when your extension is installed. Chrome + Firefox",
+  "license": "MIT",
+  "repository": "bfred-it/webext-inject-on-install",
+  "author": "Federico Brigante <bfred-it@users.noreply.github.com> (twitter.com/bfred_it)",
+  "keywords": [
+    "browser",
+    "extension",
+    "inject",
+    "content script",
+    "existing tabs"
+  ],
+  "files": [
+    "index.js"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "watch": "onchange 'index.js' --initial -- xo --fix",
+    "test": "xo"
+  },
+  "xo": {
+    "esnext": true,
+    "envs": [
+      "browser",
+      "webextensions"
+    ],
+    "ignores": [
+      "node_modules/**"
+    ],
+    "rules": {
+      "prefer-template": 0
+    }
+  }
+}
