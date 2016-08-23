@@ -32,5 +32,8 @@
     "rules": {
       "prefer-template": 0
     }
+  },
+  "devDependencies": {
+    "xo": "^0.16.0"
   }
 }
