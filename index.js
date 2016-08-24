@@ -8,24 +8,16 @@
 		}
 	};
 	chrome.runtime.getManifest().content_scripts.forEach(script => {
+		const allFrames = script.all_frames;
+		const url = script.matches;
 		const loadContentScripts = tab => {
 			(script.js || []).forEach(file => {
-				chrome.tabs.executeScript(tab.id, {
-					allFrames: script.all_frames,
-					file
-				}, showErrors);
+				chrome.tabs.executeScript(tab.id, {allFrames, file}, showErrors);
 			});
 			(script.css || []).forEach(file => {
-				chrome.tabs.insertCSS(tab.id, {
-					allFrames: script.all_frames,
-					file
-				}, showErrors);
+				chrome.tabs.insertCSS(tab.id, {allFrames, file}, showErrors);
 			});
 		};
-		chrome.tabs.query({
-			url: script.matches
-		}, tabs => {
-			tabs.forEach(loadContentScripts);
-		});
+		chrome.tabs.query({url}, tabs => tabs.forEach(loadContentScripts));
 	});
 })();
