@@ -1,6 +1,6 @@
 {
   "name": "webext-inject-on-install",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Automatically add content scripts to existing tabs when your extension is installed. Chrome + Firefox",
   "license": "MIT",
   "repository": "bfred-it/webext-inject-on-install",
