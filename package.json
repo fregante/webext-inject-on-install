@@ -4,7 +4,7 @@
   "description": "Automatically add content scripts to existing tabs when your extension is installed. Chrome + Firefox",
   "license": "MIT",
   "repository": "bfred-it/webext-inject-on-install",
-  "author": "Federico Brigante <bfred-it@users.noreply.github.com> (twitter.com/bfred_it)",
+  "author": "Federico Brigante <github@bfred.it> (bfred.it)",
   "keywords": [
     "browser",
     "extension",
