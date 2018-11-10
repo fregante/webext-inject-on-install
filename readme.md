@@ -5,6 +5,8 @@
 [![Travis build status](https://api.travis-ci.org/bfred-it/webext-inject-on-install.svg?branch=master)](https://travis-ci.org/bfred-it/webext-inject-on-install)
 [![npm version](https://img.shields.io/npm/v/webext-inject-on-install.svg)](https://www.npmjs.com/package/webext-inject-on-install) 
 
+Firefox actually already does this natively, so this module is automatically disabled there.
+
 ## Install
 
 ```sh

@@ -7,6 +7,10 @@
 			console.error(chrome.runtime.lastError);
 		}
 	};
+	// Disable on Firefox, it already behaves this way
+	if (navigator.vendor.indexOf('Google') < 0) {
+		return;
+	}
 	chrome.runtime.getManifest().content_scripts.forEach(script => {
 		const allFrames = script.all_frames;
 		const url = script.matches;
