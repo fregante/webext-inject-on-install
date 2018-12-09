@@ -9,6 +9,7 @@ Firefox actually already does this natively, so this module is automatically dis
 
 ## Install
 
+
 ```sh
 npm install --save webext-inject-on-install
 ```
