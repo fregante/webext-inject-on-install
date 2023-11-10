@@ -34,8 +34,8 @@ import "webext-inject-on-install";
 
 1. It gets the list of content scripts from the manifest
 2. For each content script group, it looks for open tabs that are not discarded (discarded tabs are already handled by the browser)
-3. It injects the script into the tabs matching the `matches` patterns (`exclude_matches` is not supported  https://github.com/fregante/webext-dynamic-content-scripts/issues/2)
-4. If the tab count exceeds 10 (each), it injects into the tabs only when they become active. (persistent background pages only https://github.com/fregante/webext-dynamic-content-scripts/issues/1)
+3. It injects the script into the tabs matching the `matches` patterns (`exclude_matches` is not supported  https://github.com/fregante/webext-dynamic-content-scripts/issues/5)
+4. If the tab count exceeds 10 (each), it injects into the tabs only when they become active. (persistent background pages only https://github.com/fregante/webext-dynamic-content-scripts/issues/4)
 
 ## Related
 

@@ -37,8 +37,8 @@ function onActivated({tabId}: {tabId: number}) {
 	}
 }
 
-const background = chrome.runtime.getManifest().background!;
-const isPersistentBackgroundPage = !('service_worker' in background) && background.persistent !== false;
+const background = globalThis.chrome?.runtime.getManifest().background;
+const isPersistentBackgroundPage = background && !('service_worker' in background) && background.persistent !== false;
 
 async function init() {
 	chrome.tabs.onUpdated.addListener(onDiscarded);
@@ -54,7 +54,7 @@ async function init() {
 	await asyncForEach(scripts, async contentScript => {
 		const liveTabs = await chrome.tabs.query({url: contentScript.matches, discarded: false});
 		const scriptableTabs = liveTabs.filter(tab => isScriptableUrl(tab.url));
-		// TODO: MV3 support via chrome.storage.session https://github.com/fregante/webext-dynamic-content-scripts/issues/1
+		// TODO: MV3 support via chrome.storage.session https://github.com/fregante/webext-dynamic-content-scripts/issues/4
 		const singleInjection = !isPersistentBackgroundPage || scriptableTabs.length <= acceptableInjectionsCount;
 
 		for (const tab of scriptableTabs) {
@@ -70,5 +70,7 @@ async function init() {
 	});
 }
 
-// eslint-disable-next-line unicorn/prefer-top-level-await -- Single-file, it's better to keep an `init` function
-void init();
+if (globalThis.chrome) {
+	// eslint-disable-next-line unicorn/prefer-top-level-await -- Single-file, it's better to keep an `init` function
+	void init();
+}
