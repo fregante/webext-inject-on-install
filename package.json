@@ -1,12 +1,15 @@
 {
 	"name": "webext-inject-on-install",
 	"version": "1.0.2",
-	"description": "Automatically add content scripts to existing tabs when your extension is installed. Chrome + Firefox",
+	"description": "Automatically add content scripts to existing tabs when your extension is installed",
 	"keywords": [
 		"browser",
 		"content script",
 		"existing tabs",
 		"extension",
+		"chrome",
+		"firefox",
+		"safari",
 		"inject"
 	],
 	"repository": "fregante/webext-inject-on-install",
