@@ -7,6 +7,6 @@ Thumbs.db
 *.bak
 *.log
 logs
-
-*.common-js.js
-*.es-modules.js
+*.map
+dist
+distribution

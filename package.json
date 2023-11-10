@@ -9,31 +9,35 @@
     "extension",
     "inject"
   ],
-  "repository": "bfred-it/webext-inject-on-install",
+  "repository": "fregante/webext-inject-on-install",
+  "funding": "https://github.com/sponsors/fregante",
   "license": "MIT",
   "author": "Federico Brigante <me@fregante.com> (https://fregante.com)",
+  "type": "module",
+  "exports": "./index.js",
+  "types": "./index.d.ts",
   "files": [
-    "index.js"
+    "index.js",
+    "index.d.ts",
+    "types.d.ts"
   ],
-  "main": "index.js",
   "scripts": {
-    "test": "xo",
-    "watch": "onchange 'index.js' --initial -- xo --fix"
+    "build": "tsc",
+    "prepare": "tsc --sourceMap false",
+    "test": "xo && tsc --noEmit",
+    "watch": "tsc --watch"
   },
-  "xo": {
-    "envs": [
-      "browser",
-      "webextensions"
-    ],
-    "esnext": true,
-    "ignores": [
-      "node_modules/**"
-    ],
-    "rules": {
-      "prefer-template": 0
-    }
+  "dependencies": {
+    "webext-content-scripts": "^2.6.0",
+    "webext-polyfill-kinda": "^1.0.2"
   },
   "devDependencies": {
-    "xo": "^0.16.0"
+    "@sindresorhus/tsconfig": "^5.0.0",
+    "@types/chrome": "^0.0.251",
+    "typescript": "^5.2.2",
+    "xo": "^0.56.0"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

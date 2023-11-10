@@ -1,43 +1,48 @@
-# webext-inject-on-install
+# webext-inject-on-install [![][badge-gzip]][link-bundlephobia]
 
-> Automatically add content scripts to existing tabs when your extension is installed. Chrome + Firefox
+[badge-gzip]: https://img.shields.io/bundlephobia/minzip/webext-inject-on-install.svg?label=gzipped
+[link-bundlephobia]: https://bundlephobia.com/result?p=webext-inject-on-install
 
-[![Travis build status](https://api.travis-ci.org/bfred-it/webext-inject-on-install.svg?branch=master)](https://travis-ci.org/bfred-it/webext-inject-on-install)
-[![npm version](https://img.shields.io/npm/v/webext-inject-on-install.svg)](https://www.npmjs.com/package/webext-inject-on-install)
+> Automatically add content scripts to existing tabs when your extension is installed.
 
 Firefox actually already does this natively, so this module is automatically disabled there.
+
+- Browsers: Chrome, Firefox, and Safari
+- Manifest: v2 and v3
+- Permissions: `tabs` in Manifest v2; `tabs` and `scripting` in Manifest v3
+- Context: `background`
+
+**Sponsored by [PixieBrix](https://www.pixiebrix.com)** :tada:
 
 ## Install
 
 ```sh
-npm install --save webext-inject-on-install
+npm install webext-inject-on-install
 ```
+
+Or download the [standalone bundle](https://bundle.fregante.com/?pkg=webext-inject-on-install) to include in your `manifest.json`.
 
 ## Usage
 
-This script automatically picks up whatever is specified in `content_scripts`.
-
-Include `index.js` directly in manifest.json as a background script, for example:
-
-```json
-{
-    "background": {
-        "scripts": [
-            "node_modules/webext-inject-on-install/index.js"
-        ]
-    }
-}
-```
-
-Alternatively, if you use rollup (suggested) or browserify:
+It registers automatically:
 
 ```js
-require('webext-inject-on-install');
+import "webext-inject-on-install";
 ```
+
+## How it works
+
+1. It gets the list of content scripts from the manifest
+2. For each content script group, it looks for open tabs that are not discarded (discarded tabs are already handled by the browser)
+3. It injects the script into the tabs matching the `matches` patterns (`exclude_matches` is not supported  https://github.com/fregante/webext-dynamic-content-scripts/issues/2)
+4. If the tab count exceeds 10 (each), it injects into the tabs only when they become active. (persistent background pages only https://github.com/fregante/webext-dynamic-content-scripts/issues/1)
 
 ## Related
 
-* [`Awesome WebExtensions`](https://github.com/bfred-it/Awesome-WebExtensions): A curated list of awesome resources for Web Extensions development
+- [webext-dynamic-content-scripts](https://github.com/fregante/webext-dynamic-content-scripts) - Automatically registers your `content_scripts` on domains added via `permission.request`
+- [webext-content-scripts](https://github.com/fregante/webext-content-scripts) - Utility functions to inject content scripts in WebExtensions.
+- [webext-options-sync](https://github.com/fregante/webext-options-sync) - Helps you manage and autosave your extension's options.
+- [More…](https://github.com/fregante/webext-fun)
 
 ## License
 
