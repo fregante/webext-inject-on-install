@@ -10,3 +10,5 @@ logs
 *.map
 dist
 distribution
+index.js
+index.d.ts

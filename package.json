@@ -1,43 +1,43 @@
 {
-  "name": "webext-inject-on-install",
-  "version": "1.0.2",
-  "description": "Automatically add content scripts to existing tabs when your extension is installed. Chrome + Firefox",
-  "keywords": [
-    "browser",
-    "content script",
-    "existing tabs",
-    "extension",
-    "inject"
-  ],
-  "repository": "fregante/webext-inject-on-install",
-  "funding": "https://github.com/sponsors/fregante",
-  "license": "MIT",
-  "author": "Federico Brigante <me@fregante.com> (https://fregante.com)",
-  "type": "module",
-  "exports": "./index.js",
-  "types": "./index.d.ts",
-  "files": [
-    "index.js",
-    "index.d.ts",
-    "types.d.ts"
-  ],
-  "scripts": {
-    "build": "tsc",
-    "prepare": "tsc --sourceMap false",
-    "test": "xo && tsc --noEmit",
-    "watch": "tsc --watch"
-  },
-  "dependencies": {
-    "webext-content-scripts": "^2.6.0",
-    "webext-polyfill-kinda": "^1.0.2"
-  },
-  "devDependencies": {
-    "@sindresorhus/tsconfig": "^5.0.0",
-    "@types/chrome": "^0.0.251",
-    "typescript": "^5.2.2",
-    "xo": "^0.56.0"
-  },
-  "engines": {
-    "node": ">=18"
-  }
+	"name": "webext-inject-on-install",
+	"version": "1.0.2",
+	"description": "Automatically add content scripts to existing tabs when your extension is installed. Chrome + Firefox",
+	"keywords": [
+		"browser",
+		"content script",
+		"existing tabs",
+		"extension",
+		"inject"
+	],
+	"repository": "fregante/webext-inject-on-install",
+	"funding": "https://github.com/sponsors/fregante",
+	"license": "MIT",
+	"author": "Federico Brigante <me@fregante.com> (https://fregante.com)",
+	"type": "module",
+	"exports": "./index.js",
+	"types": "./index.d.ts",
+	"files": [
+		"index.js",
+		"index.d.ts",
+		"types.d.ts"
+	],
+	"scripts": {
+		"build": "tsc",
+		"prepack": "tsc --sourceMap false",
+		"test": "tsc --noEmit && xo",
+		"watch": "tsc --watch"
+	},
+	"dependencies": {
+		"webext-content-scripts": "^2.6.0",
+		"webext-polyfill-kinda": "^1.0.2"
+	},
+	"devDependencies": {
+		"@sindresorhus/tsconfig": "^5.0.0",
+		"@types/chrome": "^0.0.251",
+		"typescript": "^5.2.2",
+		"xo": "^0.56.0"
+	},
+	"engines": {
+		"node": ">=18"
+	}
 }
