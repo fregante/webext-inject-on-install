@@ -3,7 +3,7 @@
 > Automatically add content scripts to existing tabs when your extension is installed. Chrome + Firefox
 
 [![Travis build status](https://api.travis-ci.org/bfred-it/webext-inject-on-install.svg?branch=master)](https://travis-ci.org/bfred-it/webext-inject-on-install)
-[![npm version](https://img.shields.io/npm/v/webext-inject-on-install.svg)](https://www.npmjs.com/package/webext-inject-on-install) 
+[![npm version](https://img.shields.io/npm/v/webext-inject-on-install.svg)](https://www.npmjs.com/package/webext-inject-on-install)
 
 Firefox actually already does this natively, so this module is automatically disabled there.
 
@@ -15,7 +15,7 @@ npm install --save webext-inject-on-install
 
 ## Usage
 
-This script automatically picks up whatever is specified in `content_scripts`. 
+This script automatically picks up whatever is specified in `content_scripts`.
 
 Include `index.js` directly in manifest.json as a background script, for example:
 
@@ -41,4 +41,4 @@ require('webext-inject-on-install');
 
 ## License
 
-MIT © [Federico Brigante](http://twitter.com/bfred_it)
+MIT © [Federico Brigante](https://fregante.com)
