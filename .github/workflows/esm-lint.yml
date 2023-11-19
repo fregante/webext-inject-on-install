@@ -1,6 +1,6 @@
 env:
   IMPORT_TEXT: import
-  NPM_MODULE_NAME: webext-inject-on-install
+  NPM_MODULE_NAME: webext-inject-on-install/register
 
 # FILE GENERATED WITH: npx ghat fregante/ghatemplates/esm-lint
 # SOURCE: https://github.com/fregante/ghatemplates
