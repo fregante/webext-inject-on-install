@@ -1,9 +1,9 @@
 {
-  "extends": "@sindresorhus/tsconfig",
-  "compilerOptions": {
-    "outDir": "distribution"
-  },
-  "include": [
-    "source"
-  ]
+	"extends": "@sindresorhus/tsconfig",
+	"compilerOptions": {
+		"outDir": "distribution"
+	},
+	"include": [
+		"source"
+	]
 }

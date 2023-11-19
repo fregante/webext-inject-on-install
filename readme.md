@@ -9,7 +9,7 @@ Firefox actually already does this natively, so this module is automatically dis
 
 - Browsers: Chrome, Firefox, and Safari
 - Manifest: v2 and v3
-- Permissions: `tabs` in Manifest v2; `tabs` and `scripting` in Manifest v3
+- Permissions: `tabs` + explicit host permissions in `permissions`; in Manifest v3 you'll also need `scripting`
 - Context: `background`
 
 **Sponsored by [PixieBrix](https://www.pixiebrix.com)** :tada:

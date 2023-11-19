@@ -1,5 +1,3 @@
-/// <reference types="bun-types" />
-/// <reference lib="dom" />
 import {expect, test, beforeEach} from 'bun:test';
 import chrome from 'sinon-chrome';
 import progressivelyInjectScript, {tracked} from './inject.js';
