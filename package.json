@@ -25,33 +25,74 @@
 	"files": [
 		"distribution"
 	],
+	"scripts": {
+		"build": "tsc",
+		"demo:build": "parcel build --no-cache",
+		"demo:watch": "parcel watch --no-cache --no-hmr",
+		"prepack": "tsc --sourceMap false",
+		"test": "tsc --noEmit && xo && test:bun",
+		"test:bun": "bun test --preload ./source/test-setup.js",
+		"watch": "tsc --watch"
+	},
 	"xo": {
 		"rules": {
 			"unicorn/prefer-top-level-await": "off"
 		}
-	},
-	"scripts": {
-		"build": "tsc",
-		"prepack": "tsc --sourceMap false",
-		"test": "tsc --noEmit && xo",
-		"test:bun": "bun test",
-		"watch": "tsc --watch"
 	},
 	"dependencies": {
 		"webext-content-scripts": "^2.6.0",
 		"webext-polyfill-kinda": "^1.0.2"
 	},
 	"devDependencies": {
+		"@parcel/config-webextension": "^2.10.3",
 		"@sindresorhus/tsconfig": "^5.0.0",
 		"@types/chrome": "^0.0.251",
 		"@types/sinon-chrome": "^2.2.14",
 		"bun": "^1.0.13",
 		"bun-types": "^1.0.13",
+		"parcel": "^2.10.3",
 		"sinon-chrome": "^3.0.1",
 		"typescript": "^5.2.2",
 		"xo": "^0.56.0"
 	},
 	"engines": {
 		"node": ">=18"
+	},
+	"alias": {
+		"these-are-just-mocks-for-parcel-tests": "yolo",
+		"webext-inject-on-install": "./source/"
+	},
+	"targets": {
+		"main": false,
+		"default": {
+			"engines": {
+				"browsers": ""
+			},
+			"source": "./demo/manifest.json",
+			"distDir": "./node_modules/.built/demo",
+			"sourceMap": {
+				"inline": true
+			},
+			"optimize": false
+		}
+	},
+	"webExt": {
+		"sourceDir": "node_modules/.built/demo",
+		"run": {
+			"startUrl": [
+				"https://ephiframe.vercel.app/tab-1",
+				"https://ephiframe.vercel.app/tab-2",
+				"https://ephiframe.vercel.app/tab-3",
+				"https://ephiframe.vercel.app/tab-4",
+				"https://ephiframe.vercel.app/tab-5",
+				"https://ephiframe.vercel.app/tab-6",
+				"https://ephiframe.vercel.app/tab-7",
+				"https://ephiframe.vercel.app/tab-8",
+				"https://ephiframe.vercel.app/tab-9",
+				"https://ephiframe.vercel.app/tab-10",
+				"https://ephiframe.vercel.app/tab-11",
+				"https://alt-ephiframe.vercel.app"
+			]
+		}
 	}
 }

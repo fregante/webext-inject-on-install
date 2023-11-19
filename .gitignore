@@ -10,3 +10,4 @@ logs
 *.map
 dist
 distribution
+.parcel-cache
