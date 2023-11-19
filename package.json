@@ -17,13 +17,19 @@
 	"license": "MIT",
 	"author": "Federico Brigante <me@fregante.com> (https://fregante.com)",
 	"type": "module",
-	"exports": "./index.js",
-	"types": "./index.d.ts",
+	"exports": {
+		".": "./distribution/register.js",
+		"./register": "./distribution/register.js",
+		"./inject.js": "./distribution/inject.js"
+	},
 	"files": [
-		"index.js",
-		"index.d.ts",
-		"types.d.ts"
+		"distribution"
 	],
+	"xo": {
+		"rules": {
+			"unicorn/prefer-top-level-await": "off"
+		}
+	},
 	"scripts": {
 		"build": "tsc",
 		"prepack": "tsc --sourceMap false",
