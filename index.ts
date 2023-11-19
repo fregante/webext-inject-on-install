@@ -82,7 +82,7 @@ async function init() {
 	});
 }
 
-if (globalThis.chrome) {
+if (globalThis.chrome && !navigator.userAgent.includes('Firefox')) {
 	// eslint-disable-next-line unicorn/prefer-top-level-await -- Single-file, it's better to keep an `init` function
 	void init();
 }
