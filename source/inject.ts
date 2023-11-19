@@ -5,7 +5,7 @@ const acceptableInjectionsCount = 10;
 
 type ContentScript = NonNullable<chrome.runtime.Manifest['content_scripts']>[number];
 
-const tracked = new Map<number, ContentScript[]>();
+export const tracked = new Map<number, ContentScript[]>();
 
 function forgetTab(tabId: number) {
 	tracked.delete(tabId);
@@ -29,7 +29,7 @@ function onActivated({tabId}: {tabId: number}) {
 	}
 
 	forgetTab(tabId);
-	console.debug('webext-inject-on-install: Injecting', scripts, 'into tab', tabId);
+	console.debug('webext-inject-on-install: Deferred injecting', scripts, 'into tab', tabId);
 	for (const script of scripts) {
 		void injectContentScript(tabId, script);
 	}
@@ -50,7 +50,8 @@ export default async function progressivelyInjectScript(contentScript: ContentSc
 		if (singleInjection || tab.active) {
 			console.debug('webext-inject-on-install: Injecting', contentScript, 'into tab', tab.id);
 			void injectContentScript(
-				tab.id!,
+				// Unless https://github.com/fregante/webext-content-scripts/issues/30 is changed
+				contentScript.all_frames ? tab.id! : {tabId: tab.id!, frameId: 0},
 				contentScript,
 			);
 		} else {

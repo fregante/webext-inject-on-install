@@ -1,0 +1,246 @@
+// Bun Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`base usage 1`] = `
+[
+  [
+    1,
+    {
+      "allFrames": false,
+      "file": "foo.js",
+      "frameId": 0,
+      "matchAboutBlank": undefined,
+      "runAt": undefined,
+    },
+    [Function],
+  ],
+  [
+    1,
+    {
+      "allFrames": false,
+      "file": "bar.js",
+      "frameId": 0,
+      "matchAboutBlank": undefined,
+      "runAt": undefined,
+    },
+    [Function],
+  ],
+]
+`;
+
+exports[`base usage 2`] = `
+[
+  [
+    1,
+    {
+      "allFrames": false,
+      "file": "foo.css",
+      "frameId": 0,
+      "matchAboutBlank": undefined,
+      "runAt": "document_start",
+    },
+    [Function],
+  ],
+]
+`;
+
+exports[`deferred usage 1`] = `
+Map {
+  0 => [
+    {
+      "css": [
+        "foo.css",
+      ],
+      "js": [
+        "foo.js",
+        "bar.js",
+      ],
+      "matches": [
+        "https://example.com/*",
+      ],
+    },
+  ],
+  1 => [
+    {
+      "css": [
+        "foo.css",
+      ],
+      "js": [
+        "foo.js",
+        "bar.js",
+      ],
+      "matches": [
+        "https://example.com/*",
+      ],
+    },
+  ],
+  2 => [
+    {
+      "css": [
+        "foo.css",
+      ],
+      "js": [
+        "foo.js",
+        "bar.js",
+      ],
+      "matches": [
+        "https://example.com/*",
+      ],
+    },
+  ],
+  3 => [
+    {
+      "css": [
+        "foo.css",
+      ],
+      "js": [
+        "foo.js",
+        "bar.js",
+      ],
+      "matches": [
+        "https://example.com/*",
+      ],
+    },
+  ],
+  4 => [
+    {
+      "css": [
+        "foo.css",
+      ],
+      "js": [
+        "foo.js",
+        "bar.js",
+      ],
+      "matches": [
+        "https://example.com/*",
+      ],
+    },
+  ],
+  5 => [
+    {
+      "css": [
+        "foo.css",
+      ],
+      "js": [
+        "foo.js",
+        "bar.js",
+      ],
+      "matches": [
+        "https://example.com/*",
+      ],
+    },
+  ],
+  6 => [
+    {
+      "css": [
+        "foo.css",
+      ],
+      "js": [
+        "foo.js",
+        "bar.js",
+      ],
+      "matches": [
+        "https://example.com/*",
+      ],
+    },
+  ],
+  7 => [
+    {
+      "css": [
+        "foo.css",
+      ],
+      "js": [
+        "foo.js",
+        "bar.js",
+      ],
+      "matches": [
+        "https://example.com/*",
+      ],
+    },
+  ],
+  8 => [
+    {
+      "css": [
+        "foo.css",
+      ],
+      "js": [
+        "foo.js",
+        "bar.js",
+      ],
+      "matches": [
+        "https://example.com/*",
+      ],
+    },
+  ],
+  9 => [
+    {
+      "css": [
+        "foo.css",
+      ],
+      "js": [
+        "foo.js",
+        "bar.js",
+      ],
+      "matches": [
+        "https://example.com/*",
+      ],
+    },
+  ],
+  10 => [
+    {
+      "css": [
+        "foo.css",
+      ],
+      "js": [
+        "foo.js",
+        "bar.js",
+      ],
+      "matches": [
+        "https://example.com/*",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`deferred usage 2`] = `
+[
+  [
+    5,
+    {
+      "allFrames": true,
+      "file": "foo.js",
+      "frameId": undefined,
+      "matchAboutBlank": undefined,
+      "runAt": undefined,
+    },
+    [Function],
+  ],
+  [
+    5,
+    {
+      "allFrames": true,
+      "file": "bar.js",
+      "frameId": undefined,
+      "matchAboutBlank": undefined,
+      "runAt": undefined,
+    },
+    [Function],
+  ],
+]
+`;
+
+exports[`deferred usage 3`] = `
+[
+  [
+    5,
+    {
+      "allFrames": true,
+      "file": "foo.css",
+      "frameId": undefined,
+      "matchAboutBlank": undefined,
+      "runAt": "document_start",
+    },
+    [Function],
+  ],
+]
+`;
