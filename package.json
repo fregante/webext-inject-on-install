@@ -62,10 +62,6 @@
 	"engines": {
 		"node": ">=18"
 	},
-	"alias": {
-		"these-are-just-mocks-for-parcel-tests": "yolo",
-		"webext-inject-on-install": "./source/"
-	},
 	"targets": {
 		"main": false,
 		"default": {

@@ -1,1 +1,1 @@
-import 'webext-inject-on-install/register';
+import '../source/register.ts';
