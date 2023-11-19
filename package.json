@@ -36,7 +36,11 @@
 	},
 	"xo": {
 		"rules": {
-			"unicorn/prefer-top-level-await": "off"
+			"unicorn/prefer-top-level-await": "off",
+			"@typescript-eslint/no-unsafe-assignment": "off",
+			"@typescript-eslint/no-unsafe-call": "off",
+			"@typescript-eslint/no-unsafe-argument": "off",
+			"type rules disabled because xo is unable to pick up the types": "off"
 		}
 	},
 	"dependencies": {
