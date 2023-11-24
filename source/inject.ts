@@ -13,11 +13,18 @@ function forgetTab(tabId: number) {
 		chrome.tabs.onUpdated.removeListener(onDiscarded);
 		chrome.tabs.onRemoved.removeListener(forgetTab);
 		chrome.tabs.onActivated.removeListener(onActivated);
+		chrome.webNavigation?.onCommitted.removeListener(onCommitted);
 	}
 }
 
 function onDiscarded(tabId: number, changeInfo: {discarded?: boolean}) {
 	if (changeInfo.discarded) {
+		forgetTab(tabId);
+	}
+}
+
+function onCommitted({tabId, frameId}: {tabId: number; frameId: number}) {
+	if (frameId === 0) {
 		forgetTab(tabId);
 	}
 }
@@ -69,6 +76,9 @@ export default async function progressivelyInjectScript(contentScript: ContentSc
 			chrome.tabs.onUpdated.addListener(onDiscarded);
 			chrome.tabs.onRemoved.addListener(forgetTab);
 			chrome.tabs.onActivated.addListener(onActivated);
+
+			// Catch tab navigations that happen while the tab is not active
+			chrome.webNavigation?.onCommitted.addListener(onCommitted);
 			const scripts = tracked.get(tab.id!) ?? [];
 			scripts.push(contentScript);
 			tracked.set(tab.id!, scripts);
