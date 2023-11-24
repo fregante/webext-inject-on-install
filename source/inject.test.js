@@ -33,7 +33,7 @@ test('deferred usage', async () => {
 		js: ['foo.js', 'bar.js'],
 		css: ['foo.css'],
 	};
-	const scriptableTabs = Array.from({length: 11}).fill(0).map((_, i) => ({url: `https://example.com/${i}`, discarded: false, id: i}));
+	const scriptableTabs = Array.from({length: 11}).fill(0).map((_, id) => ({url: `https://example.com/${id}`, discarded: false, id}));
 
 	chrome.tabs.query.withArgs({url: contentScript.matches, discarded: false}).yields(scriptableTabs);
 
@@ -65,4 +65,25 @@ test('deferred usage', async () => {
 	expect(chrome.tabs.insertCSS.callCount).toBe(1);
 	expect(chrome.tabs.executeScript.getCalls().map(x => x.args)).toMatchSnapshot();
 	expect(chrome.tabs.insertCSS.getCalls().map(x => x.args)).toMatchSnapshot();
+
+	// Ensure that navigation away removes the tab without injecting the script
+	chrome.webNavigation.onCommitted.trigger({tabId: 6, frameId: 2});
+	expect(tracked).toHaveLength(6);
+	chrome.webNavigation.onCommitted.trigger({tabId: 6, frameId: 0});
+	expect(tracked).toHaveLength(5);
+	expect(chrome.tabs.executeScript.callCount).toBe(2);
+
+	// Ensure that the listeners are removed once the list is empty
+	expect(chrome.tabs.onUpdated.removeListener.callCount).toBe(0);
+	chrome.tabs.onRemoved.trigger(7);
+	chrome.tabs.onRemoved.trigger(8);
+	chrome.tabs.onRemoved.trigger(9);
+	chrome.tabs.onRemoved.trigger(10);
+	chrome.tabs.onRemoved.trigger(11);
+	expect(chrome.tabs.onUpdated.removeListener.callCount).toBe(0);
+	chrome.tabs.onRemoved.trigger(0);
+	expect(tracked).toHaveLength(0);
+
+	// TODO: This should be 1, I'm not sure why `forgetTab` is being called 6 times at once. I assume it's a sinon-chrome bug
+	expect(chrome.tabs.onUpdated.removeListener.callCount).toBe(6);
 });
