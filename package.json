@@ -30,7 +30,7 @@
 		"demo:build": "parcel build --no-cache",
 		"demo:watch": "parcel watch --no-cache --no-hmr",
 		"prepack": "tsc --sourceMap false",
-		"test": "tsc --noEmit && xo && test:bun",
+		"test": "tsc --noEmit && xo && npm run test:bun",
 		"test:bun": "bun test --preload ./source/test-setup.js",
 		"watch": "tsc --watch"
 	},
@@ -52,8 +52,8 @@
 		"@sindresorhus/tsconfig": "^5.0.0",
 		"@types/chrome": "^0.0.251",
 		"@types/sinon-chrome": "^2.2.14",
-		"bun": "^1.0.13",
-		"bun-types": "^1.0.13",
+		"bun": "^1.0.20",
+		"bun-types": "^1.0.20",
 		"parcel": "^2.10.3",
 		"sinon-chrome": "^3.0.1",
 		"typescript": "^5.2.2",
@@ -61,10 +61,6 @@
 	},
 	"engines": {
 		"node": ">=18"
-	},
-	"alias": {
-		"these-are-just-mocks-for-parcel-tests": "yolo",
-		"webext-inject-on-install": "./source/"
 	},
 	"targets": {
 		"main": false,

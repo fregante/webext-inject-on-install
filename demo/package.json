@@ -1,0 +1,6 @@
+{
+	"type": "module",
+	"alias": {
+		"webext-inject-on-install": "../source/"
+	}
+}
