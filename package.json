@@ -50,13 +50,13 @@
 	"devDependencies": {
 		"@parcel/config-webextension": "^2.10.3",
 		"@sindresorhus/tsconfig": "^5.0.0",
-		"@types/chrome": "^0.0.251",
-		"@types/sinon-chrome": "^2.2.14",
+		"@types/chrome": "^0.0.254",
+		"@types/sinon-chrome": "^2.2.15",
 		"bun": "^1.0.20",
 		"bun-types": "^1.0.20",
 		"parcel": "^2.10.3",
 		"sinon-chrome": "^3.0.1",
-		"typescript": "^5.2.2",
+		"typescript": "^5.3.3",
 		"xo": "^0.56.0"
 	},
 	"engines": {
