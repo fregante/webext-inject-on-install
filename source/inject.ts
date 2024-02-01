@@ -1,4 +1,5 @@
 import {injectContentScript, isScriptableUrl} from 'webext-content-scripts';
+import {isPersistentBackgroundPage} from 'webext-detect-page';
 import chromeP from 'webext-polyfill-kinda';
 
 const acceptableInjectionsCount = 10;
@@ -42,11 +43,8 @@ function onActivated({tabId}: {tabId: number}) {
 	}
 }
 
-const background = globalThis.chrome?.runtime.getManifest().background;
-const permissions = globalThis.chrome?.runtime.getManifest().permissions;
-const isPersistentBackgroundPage = background && !('service_worker' in background) && background.persistent !== false;
-
 export default async function progressivelyInjectScript(contentScript: ContentScript) {
+	const permissions = globalThis.chrome?.runtime.getManifest().permissions;
 	if (!permissions?.includes('tabs')) {
 		throw new Error('webext-inject-on-install: The "tabs" permission is required');
 	}
@@ -60,8 +58,9 @@ export default async function progressivelyInjectScript(contentScript: ContentSc
 		return;
 	}
 
-	// TODO: Non-persistent pages support via chrome.storage.session https://github.com/fregante/webext-dynamic-content-scripts/issues/1
-	const singleInjection = !isPersistentBackgroundPage || scriptableTabs.length <= acceptableInjectionsCount;
+	// TODO: Non-persistent pages support via chrome.storage.session
+	// https://github.com/fregante/webext-inject-on-install/issues/4
+	const singleInjection = !isPersistentBackgroundPage() || scriptableTabs.length <= acceptableInjectionsCount;
 	console.debug('webext-inject-on-install: Single injection?', singleInjection);
 
 	for (const tab of scriptableTabs) {
