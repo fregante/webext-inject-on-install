@@ -1,5 +1,6 @@
+import {onExtensionStart} from 'webext-events';
+
 import progressivelyInjectScript from './inject.js';
-import { onExtensionStart } from 'webext-events';
 
 if (globalThis.chrome && !navigator.userAgent.includes('Firefox')) {
 	onExtensionStart.addListener(() => {
