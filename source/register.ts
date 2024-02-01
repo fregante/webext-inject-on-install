@@ -1,5 +1,4 @@
 import {onExtensionStart} from 'webext-events';
-
 import progressivelyInjectScript from './inject.js';
 
 if (globalThis.chrome && !navigator.userAgent.includes('Firefox')) {
