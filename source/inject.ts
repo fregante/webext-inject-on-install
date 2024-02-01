@@ -43,7 +43,6 @@ function onActivated({tabId}: {tabId: number}) {
 	}
 }
 
-
 export default async function progressivelyInjectScript(contentScript: ContentScript) {
 	const permissions = globalThis.chrome?.runtime.getManifest().permissions;
 	if (!permissions?.includes('tabs')) {
