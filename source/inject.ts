@@ -85,8 +85,12 @@ export default async function progressivelyInjectScript(contentScript: ContentSc
 
 			// Catch tab navigations that happen while the tab is not active
 			chrome.webNavigation?.onCommitted.addListener(onCommitted);
+
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- Uh, wrong?
 			const scripts = tracked.get(tab.id!) ?? [];
 			scripts.push(contentScript);
+
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- Uh, wrong?
 			tracked.set(tab.id!, scripts);
 		}
 	}
