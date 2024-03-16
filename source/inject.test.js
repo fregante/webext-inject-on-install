@@ -1,6 +1,6 @@
-import {expect, test, beforeEach} from 'bun:test';
+import {expect, test, beforeEach} from 'vitest';
 import chrome from 'sinon-chrome';
-import progressivelyInjectScript, {tracked} from './inject.js';
+import progressivelyInjectScript, {tracked} from './inject.ts';
 
 beforeEach(() => {
 	chrome.flush();
