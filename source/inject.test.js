@@ -1,4 +1,6 @@
-import {expect, test, beforeEach, mock} from 'bun:test';
+import {
+	expect, test, beforeEach, mock,
+} from 'bun:test';
 import chrome from 'sinon-chrome';
 import progressivelyInjectScript, {tracked} from './inject.js';
 
