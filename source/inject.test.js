@@ -1,9 +1,14 @@
-import {expect, test, beforeEach} from 'bun:test';
+import {
+	expect, test, beforeEach, mock,
+} from 'bun:test';
 import chrome from 'sinon-chrome';
 import progressivelyInjectScript, {tracked} from './inject.js';
 
+mock.module('webext-detect-page', () => ({isPersistentBackgroundPage: () => true}));
+
 beforeEach(() => {
 	chrome.flush();
+	chrome.runtime.getManifest.returns({permissions: ['tabs']});
 	tracked.clear();
 });
 
