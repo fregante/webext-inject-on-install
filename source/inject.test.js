@@ -22,7 +22,11 @@ test('base usage', async () => {
 		{url: 'https://example.com/', discarded: false, id: 1},
 	];
 
-	chrome.tabs.query.withArgs({url: contentScript.matches, discarded: false}).yields(scriptableTabs);
+	chrome.tabs.query.withArgs({
+		url: contentScript.matches,
+		discarded: false,
+		status: 'complete',
+	}).yields(scriptableTabs);
 
 	await progressivelyInjectScript(contentScript);
 	expect(chrome.tabs.executeScript.getCalls().map(x => x.args)).toMatchSnapshot();
@@ -40,7 +44,11 @@ test('deferred usage', async () => {
 	};
 	const scriptableTabs = Array.from({length: 11}).fill(0).map((_, id) => ({url: `https://example.com/${id}`, discarded: false, id}));
 
-	chrome.tabs.query.withArgs({url: contentScript.matches, discarded: false}).yields(scriptableTabs);
+	chrome.tabs.query.withArgs({
+		url: contentScript.matches,
+		discarded: false,
+		status: 'complete',
+	}).yields(scriptableTabs);
 
 	await progressivelyInjectScript(contentScript);
 

@@ -49,7 +49,14 @@ export default async function progressivelyInjectScript(contentScript: ContentSc
 		throw new Error('webext-inject-on-install: The "tabs" permission is required');
 	}
 
-	const liveTabs = await chromeP.tabs.query({url: contentScript.matches, discarded: false});
+	const liveTabs = await chromeP.tabs.query({
+		url: contentScript.matches,
+		discarded: false,
+
+		// Excludes unloaded tabs https://github.com/fregante/webext-inject-on-install/issues/11
+		status: 'complete',
+	});
+
 	// `tab.url` is empty when the browser is starting, which is convenient because we don't need to inject anything.
 	const scriptableTabs = liveTabs.filter(tab => isScriptableUrl(tab.url));
 	console.debug('webext-inject-on-install: Found', scriptableTabs.length, 'tabs matching', contentScript);
