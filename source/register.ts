@@ -1,7 +1,7 @@
 import {onExtensionStart} from 'webext-events';
 import progressivelyInjectScript from './inject.js';
 
-if (globalThis.chrome && !navigator.userAgent.includes('Firefox')) {
+if (globalThis.chrome && navigator.userAgent.includes('Chrome')) {
 	onExtensionStart.addListener(() => {
 		const {content_scripts: scripts} = chrome.runtime.getManifest();
 
