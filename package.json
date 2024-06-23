@@ -46,19 +46,19 @@
 	"dependencies": {
 		"webext-content-scripts": "^2.6.1",
 		"webext-detect-page": "^5.0.1",
-		"webext-events": "^2.2.2",
+		"webext-events": "^3.0.0",
 		"webext-polyfill-kinda": "^1.0.2"
 	},
 	"devDependencies": {
 		"@parcel/config-webextension": "^2.12.0",
 		"@sindresorhus/tsconfig": "^5.0.0",
-		"@types/chrome": "^0.0.263",
+		"@types/chrome": "^0.0.268",
 		"@types/sinon-chrome": "^2.2.15",
-		"bun": "^1.0.31",
-		"bun-types": "^1.0.31",
+		"bun": "^1.1.16",
+		"bun-types": "^1.1.16",
 		"parcel": "^2.12.0",
 		"sinon-chrome": "^3.0.1",
-		"typescript": "^5.4.2",
+		"typescript": "^5.5.2",
 		"xo": "^0.58.0"
 	},
 	"engines": {

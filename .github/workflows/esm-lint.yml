@@ -1,6 +1,7 @@
 env:
   IMPORT_TEXT: import
   NPM_MODULE_NAME: webext-inject-on-install
+  NODE_VERSION: 18
 
 # FILE GENERATED WITH: npx ghat fregante/ghatemplates/esm-lint
 # SOURCE: https://github.com/fregante/ghatemplates
@@ -69,11 +70,9 @@ jobs:
     needs: Pack
     steps:
       - uses: actions/download-artifact@v3
-      - run: npm install ./artifact @sindresorhus/tsconfig
+      - run: npm install ./artifact
       - run: echo "${{ env.IMPORT_TEXT }} '${{ env.NPM_MODULE_NAME }}'" > index.ts
-      - run: |
-          echo '{"extends":"@sindresorhus/tsconfig","files":["index.ts"]}' > tsconfig.json
-      - run: tsc
+      - run: tsc index.ts
       - run: cat index.js
   Node:
     runs-on: ubuntu-latest
@@ -82,7 +81,7 @@ jobs:
       - uses: actions/download-artifact@v3
       - uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: ${{ env.NODE_VERSION }}
       - run: echo "${{ env.IMPORT_TEXT }} '${{ env.NPM_MODULE_NAME }}'" > index.mjs
       - run: npm install ./artifact
       - run: node index.mjs
