@@ -1,7 +1,6 @@
 env:
   IMPORT_TEXT: import
   NPM_MODULE_NAME: webext-inject-on-install
-  NODE_VERSION: 18
 
 # FILE GENERATED WITH: npx ghat fregante/ghatemplates/esm-lint
 # SOURCE: https://github.com/fregante/ghatemplates
@@ -25,14 +24,14 @@ jobs:
       - run: npm run build --if-present
       - run: npm pack --dry-run
       - run: npm pack | tail -1 | xargs -n1 tar -xzf
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           path: package
   Webpack:
     runs-on: ubuntu-latest
     needs: Pack
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
       - run: npm install ./artifact
       - run: echo "${{ env.IMPORT_TEXT }} '${{ env.NPM_MODULE_NAME }}'" > index.js
       - run: webpack --entry ./index.js
@@ -41,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: Pack
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
       - run: npm install ./artifact rollup@2 @rollup/plugin-node-resolve
       - run: echo "${{ env.IMPORT_TEXT }} '${{ env.NPM_MODULE_NAME }}'" > index.js
       - run: npx rollup -p node-resolve index.js
@@ -49,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: Pack
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
       - run: npm install ./artifact
       - run: >-
           echo '<script type="module">${{ env.IMPORT_TEXT }} "${{
@@ -60,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: Pack
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
       - run: echo '{}' > package.json
       - run: echo "${{ env.IMPORT_TEXT }} '${{ env.NPM_MODULE_NAME }}'" > index.js
       - run: npm install ./artifact
@@ -69,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: Pack
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
       - run: npm install ./artifact
       - run: echo "${{ env.IMPORT_TEXT }} '${{ env.NPM_MODULE_NAME }}'" > index.ts
       - run: tsc index.ts
@@ -78,10 +77,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: Pack
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version-file: package.json
       - run: echo "${{ env.IMPORT_TEXT }} '${{ env.NPM_MODULE_NAME }}'" > index.mjs
       - run: npm install ./artifact
       - run: node index.mjs
