@@ -1,5 +1,5 @@
 import {injectContentScript, isScriptableUrl} from 'webext-content-scripts';
-import {isPersistentBackgroundPage} from 'webext-detect-page';
+import {isPersistentBackgroundPage} from 'webext-detect';
 import chromeP from 'webext-polyfill-kinda';
 
 const acceptableInjectionsCount = 10;

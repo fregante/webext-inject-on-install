@@ -4,7 +4,7 @@ import {
 import chrome from 'sinon-chrome';
 import progressivelyInjectScript, {tracked} from './inject.js';
 
-mock.module('webext-detect-page', () => ({isPersistentBackgroundPage: () => true}));
+mock.module('webext-detect', () => ({isPersistentBackgroundPage: () => true}));
 
 beforeEach(() => {
 	chrome.flush();
