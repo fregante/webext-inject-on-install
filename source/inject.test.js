@@ -1,10 +1,13 @@
+
 import {
-	expect, test, beforeEach, mock,
-} from 'bun:test';
+	expect, test, beforeEach, vi,
+} from 'vitest';
 import chrome from 'sinon-chrome';
+// eslint-disable-next-line import/no-unassigned-import
+import './test-setup.js';
 import progressivelyInjectScript, {tracked} from './inject.js';
 
-mock.module('webext-detect', () => ({isPersistentBackgroundPage: () => true}));
+vi.mock('webext-detect', () => ({isPersistentBackgroundPage: () => true}));
 
 beforeEach(() => {
 	chrome.flush();

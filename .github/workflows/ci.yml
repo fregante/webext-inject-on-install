@@ -23,7 +23,7 @@ jobs:
         with:
           node-version-file: package.json
       - run: npm ci
-      - run: npm run test:bun
+      - run: npm run test:vitest
 
   Build:
     runs-on: ubuntu-latest

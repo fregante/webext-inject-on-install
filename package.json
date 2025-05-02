@@ -30,8 +30,8 @@
 		"demo:build": "parcel build --no-cache",
 		"demo:watch": "parcel watch --no-cache --no-hmr",
 		"prepack": "tsc --sourceMap false",
-		"test": "tsc --noEmit && xo && npm run test:bun",
-		"test:bun": "bun test --preload ./source/test-setup.js",
+		"test": "tsc --noEmit && xo && npm run test:vitest",
+		"test:vitest": "vitest test --preload ./source/test-setup.js",
 		"watch": "tsc --watch"
 	},
 	"xo": {
@@ -54,11 +54,10 @@
 		"@sindresorhus/tsconfig": "^7.0.0",
 		"@types/chrome": "^0.0.318",
 		"@types/sinon-chrome": "^2.2.15",
-		"bun": "^1.2.11",
-		"bun-types": "^1.2.11",
 		"parcel": "^2.14.4",
 		"sinon-chrome": "^3.0.1",
 		"typescript": "^5.8.3",
+		"vitest": "^3.1.2",
 		"xo": "^0.60.0"
 	},
 	"engines": {
