@@ -31,7 +31,7 @@
 		"demo:watch": "parcel watch --no-cache --no-hmr",
 		"prepack": "tsc --sourceMap false",
 		"test": "tsc --noEmit && xo && npm run test:vitest",
-		"test:vitest": "vitest test --preload ./source/test-setup.js",
+		"test:vitest": "vitest run",
 		"watch": "tsc --watch"
 	},
 	"xo": {
