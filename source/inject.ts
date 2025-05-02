@@ -4,9 +4,23 @@ import chromeP from 'webext-polyfill-kinda';
 
 const acceptableInjectionsCount = 10;
 
+const errorEnterprisePolicy = 'This page cannot be scripted due to an ExtensionsSettings policy.';
+
 type ContentScript = NonNullable<chrome.runtime.Manifest['content_scripts']>[number];
 
 export const tracked = new Map<number, ContentScript[]>();
+
+const injectAndDiscardCertainErrors: typeof injectContentScript = async (tabId, contentScript) => {
+	try {
+		await injectContentScript(tabId, contentScript);
+	} catch (error) {
+		if (error instanceof Error && error.message === errorEnterprisePolicy) {
+			console.debug('webext-inject-on-install: Enteprise policy blocked access to tab', tabId, error);
+		} else {
+			throw error;
+		}
+	}
+};
 
 function forgetTab(tabId: number) {
 	tracked.delete(tabId);
@@ -39,7 +53,7 @@ function onActivated({tabId}: {tabId: number}) {
 	forgetTab(tabId);
 	console.debug('webext-inject-on-install: Deferred injection', scripts, 'into tab', tabId);
 	for (const script of scripts) {
-		void injectContentScript(tabId, script);
+		void injectAndDiscardCertainErrors(tabId, script);
 	}
 }
 
@@ -73,7 +87,7 @@ export default async function progressivelyInjectScript(contentScript: ContentSc
 	for (const tab of scriptableTabs) {
 		if (singleInjection || tab.active) {
 			console.debug('webext-inject-on-install: Injecting', contentScript, 'into tab', tab.id);
-			void injectContentScript(
+			void injectAndDiscardCertainErrors(
 				// Unless https://github.com/fregante/webext-content-scripts/issues/30 is changed
 				contentScript.all_frames ? tab.id! : {tabId: tab.id!, frameId: 0},
 				contentScript,
