@@ -3,7 +3,7 @@ import {
 	expect, test, beforeEach, vi,
 } from 'vitest';
 import chrome from 'sinon-chrome';
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import './test-setup.js';
 import progressivelyInjectScript, {tracked} from './inject.js';
 

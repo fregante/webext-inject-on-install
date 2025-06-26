@@ -36,11 +36,7 @@
 	},
 	"xo": {
 		"rules": {
-			"unicorn/prefer-top-level-await": "off",
-			"@typescript-eslint/no-unsafe-assignment": "off",
-			"@typescript-eslint/no-unsafe-call": "off",
-			"@typescript-eslint/no-unsafe-argument": "off",
-			"type rules disabled because xo is unable to pick up the types": "off"
+			"unicorn/prefer-top-level-await": "off"
 		}
 	},
 	"dependencies": {
@@ -50,15 +46,15 @@
 		"webext-polyfill-kinda": "^1.0.2"
 	},
 	"devDependencies": {
-		"@parcel/config-webextension": "^2.14.4",
+		"@parcel/config-webextension": "^2.15.4",
 		"@sindresorhus/tsconfig": "^7.0.0",
-		"@types/chrome": "^0.0.318",
-		"@types/sinon-chrome": "^2.2.15",
-		"parcel": "^2.14.4",
+		"@types/chrome": "^0.0.326",
+		"@types/sinon-chrome": "^2.2.16",
+		"parcel": "^2.15.4",
 		"sinon-chrome": "^3.0.1",
 		"typescript": "^5.8.3",
-		"vitest": "^3.1.2",
-		"xo": "^0.60.0"
+		"vitest": "^3.2.4",
+		"xo": "^1.1.1"
 	},
 	"engines": {
 		"node": ">=18"
