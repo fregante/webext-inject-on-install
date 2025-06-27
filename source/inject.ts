@@ -1,14 +1,9 @@
 import {injectContentScript, isScriptableUrl} from 'webext-content-scripts';
-import {isPersistentBackgroundPage} from 'webext-detect';
-import chromeP from 'webext-polyfill-kinda';
-
-const acceptableInjectionsCount = 10;
+import {doesUrlMatchPatterns} from 'webext-patterns';
 
 const errorEnterprisePolicy = 'This page cannot be scripted due to an ExtensionsSettings policy.';
 
 type ContentScript = NonNullable<chrome.runtime.Manifest['content_scripts']>[number];
-
-export const tracked = new Map<number, ContentScript[]>();
 
 const injectAndDiscardCertainErrors: typeof injectContentScript = async (tabId, contentScript) => {
 	try {
@@ -22,48 +17,64 @@ const injectAndDiscardCertainErrors: typeof injectContentScript = async (tabId, 
 	}
 };
 
-function forgetTab(tabId: number) {
-	tracked.delete(tabId);
-	if (tracked.size === 0) {
-		chrome.tabs.onUpdated.removeListener(onDiscarded);
+const storageKeyRoot = 'webext-inject-on-install:';
+
+function getTabStorageKey(tabId: number) {
+	return `${storageKeyRoot}${tabId}`;
+}
+
+async function forgetTab(tabId: number) {
+	await chrome.storage.session.remove(getTabStorageKey(tabId));
+	const fullStorage = await chrome.storage.session.getKeys();
+	const tracked = fullStorage.filter(key => key.startsWith(storageKeyRoot)).length;
+	if (tracked === 0) {
+		console.debug('webext-inject-on-install: no tabs remaining. Unloading');
 		chrome.tabs.onRemoved.removeListener(forgetTab);
+		chrome.tabs.onUpdated.removeListener(onUpdated);
 		chrome.tabs.onActivated.removeListener(onActivated);
 		chrome.webNavigation?.onCommitted.removeListener(onCommitted);
+	} else {
+		console.debug('webext-inject-on-install:', tracked, 'tabs remaining');
 	}
 }
 
-function onDiscarded(tabId: number, changeInfo: {discarded?: boolean}) {
+function onUpdated(tabId: number, changeInfo: {discarded?: boolean}) {
 	if (changeInfo.discarded) {
-		forgetTab(tabId);
+		void forgetTab(tabId);
 	}
 }
 
 function onCommitted({tabId, frameId}: {tabId: number; frameId: number}) {
 	if (frameId === 0) {
-		forgetTab(tabId);
+		void forgetTab(tabId);
 	}
 }
 
-function onActivated({tabId}: {tabId: number}) {
-	const scripts = tracked.get(tabId);
-	if (!scripts) {
+async function onActivated({tabId}: {tabId: number}) {
+	const key = getTabStorageKey(tabId);
+	const storage = await chrome.storage.session.get(key);
+
+	if (!storage[key]) {
 		return;
 	}
 
-	forgetTab(tabId);
-	console.debug('webext-inject-on-install: Deferred injection', scripts, 'into tab', tabId);
+	await forgetTab(tabId);
+
+	const tab = await chrome.tabs.get(tabId);
+	const scripts = chrome.runtime.getManifest().content_scripts!;
+	console.group('webext-inject-on-install: deferred injections for', tabId);
 	for (const script of scripts) {
-		void injectAndDiscardCertainErrors(tabId, script);
+		if (tab.url && script.matches && doesUrlMatchPatterns(tab.url, ...script.matches)) {
+			console.debug(script);
+			void injectAndDiscardCertainErrors(tabId, script);
+		}
 	}
+
+	console.groupEnd();
 }
 
-export default async function progressivelyInjectScript(contentScript: ContentScript) {
-	const permissions = globalThis.chrome?.runtime.getManifest().permissions;
-	if (!permissions?.includes('tabs')) {
-		throw new Error('webext-inject-on-install: The "tabs" permission is required');
-	}
-
-	const liveTabs = await chromeP.tabs.query({
+export async function injectOneScript(contentScript: ContentScript) {
+	const liveTabs = await chrome.tabs.query({
 		url: contentScript.matches,
 		discarded: false,
 
@@ -71,39 +82,54 @@ export default async function progressivelyInjectScript(contentScript: ContentSc
 		status: 'complete',
 	});
 
-	// `tab.url` is empty when the browser is starting, which is convenient because we don't need to inject anything.
-	const scriptableTabs = liveTabs.filter(tab => isScriptableUrl(tab.url));
-	console.debug('webext-inject-on-install: Found', scriptableTabs.length, 'tabs matching', contentScript);
+	console.group('webext-inject-on-install');
+	console.debug(contentScript);
 
-	if (scriptableTabs.length === 0) {
+	const foregroundTabs: number[] = [];
+	const backgroundTabs: number[] = [];
+	for (const tab of liveTabs) {
+		if (!tab.id || !isScriptableUrl(tab.url)) {
+			continue;
+		}
+
+		if (tab.active) {
+			foregroundTabs.push(tab.id);
+		} else {
+			backgroundTabs.push(tab.id);
+		}
+	}
+
+	if (foregroundTabs.length + backgroundTabs.length === 0) {
+		console.debug('No matching tabs', contentScript);
+		console.groupEnd();
 		return;
 	}
 
-	// TODO: Non-persistent pages support via chrome.storage.session
-	// https://github.com/fregante/webext-inject-on-install/issues/4
-	const singleInjection = !isPersistentBackgroundPage() || scriptableTabs.length <= acceptableInjectionsCount;
-	console.debug('webext-inject-on-install: Single injection?', singleInjection);
-
-	for (const tab of scriptableTabs) {
-		if (singleInjection || tab.active) {
-			console.debug('webext-inject-on-install: Injecting', contentScript, 'into tab', tab.id);
-			void injectAndDiscardCertainErrors(
-				// Unless https://github.com/fregante/webext-content-scripts/issues/30 is changed
-				contentScript.all_frames ? tab.id! : {tabId: tab.id!, frameId: 0},
-				contentScript,
-			);
-		} else {
-			chrome.tabs.onUpdated.addListener(onDiscarded);
-			chrome.tabs.onRemoved.addListener(forgetTab);
-			chrome.tabs.onActivated.addListener(onActivated);
-
-			// Catch tab navigations that happen while the tab is not active
-			chrome.webNavigation?.onCommitted.addListener(onCommitted);
-
-			const scripts = tracked.get(tab.id!) ?? [];
-			scripts.push(contentScript);
-
-			tracked.set(tab.id!, scripts);
-		}
+	for (const tabId of foregroundTabs) {
+		console.debug('Foreground tab injection:', tabId);
+		void injectAndDiscardCertainErrors(
+			contentScript.all_frames ? tabId : {tabId, frameId: 0},
+			contentScript,
+		);
 	}
+
+	if (backgroundTabs.length > 0) {
+		console.debug('Background tabs:', ...backgroundTabs);
+		// Register listeners
+		chrome.tabs.onRemoved.addListener(forgetTab);
+		chrome.tabs.onUpdated.addListener(onUpdated);
+		chrome.tabs.onActivated.addListener(onActivated);
+		chrome.webNavigation?.onCommitted.addListener(onCommitted);
+
+		// Keep track of them
+		const entries = backgroundTabs.map(tabId => [getTabStorageKey(tabId), true] as const);
+		void chrome.storage.session.set(Object.fromEntries(entries));
+	}
+
+	// Warning: If there's any `await` before this, the grouping will be broken
+	console.groupEnd();
+}
+
+export default async function injectScripts(contentScripts: ContentScript[]) {
+	await Promise.allSettled(contentScripts.map(async script => injectOneScript(script)));
 }

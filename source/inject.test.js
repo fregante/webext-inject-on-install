@@ -1,13 +1,11 @@
 
 import {
-	expect, test, beforeEach, vi,
+	expect, test, beforeEach,
 } from 'vitest';
 import chrome from 'sinon-chrome';
 // eslint-disable-next-line import-x/no-unassigned-import
 import './test-setup.js';
-import progressivelyInjectScript, {tracked} from './inject.js';
-
-vi.mock('webext-detect', () => ({isPersistentBackgroundPage: () => true}));
+import {injectOneScript, _trackedSync as tracked} from './inject.js';
 
 beforeEach(() => {
 	chrome.flush();
@@ -31,7 +29,7 @@ test('base usage', async () => {
 		status: 'complete',
 	}).yields(scriptableTabs);
 
-	await progressivelyInjectScript(contentScript);
+	await injectOneScript(contentScript);
 	expect(chrome.tabs.executeScript.getCalls().map(x => x.args)).toMatchSnapshot();
 	expect(chrome.tabs.insertCSS.getCalls().map(x => x.args)).toMatchSnapshot();
 	expect(chrome.tabs.onUpdated.addListener.callCount).toBe(0);
@@ -53,7 +51,7 @@ test('deferred usage', async () => {
 		status: 'complete',
 	}).yields(scriptableTabs);
 
-	await progressivelyInjectScript(contentScript);
+	await injectOneScript(contentScript);
 
 	// Ensure no injections were made because of the large nunmber of open tabs
 	expect(chrome.tabs.executeScript.callCount).toBe(0);

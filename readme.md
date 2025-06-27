@@ -7,11 +7,11 @@
 
 > Automatically add content scripts to existing tabs when your extension is installed.
 
-Firefox actually already does this natively, so this module is automatically disabled there.
+Safari and Firefox actually already does this natively, so this module is automatically disabled there.
 
-- Browsers: Chrome, Firefox, and Safari
-- Manifest: v2 and v3
-- Permissions: `tabs` + explicit host permissions in `permissions`; in Manifest v3 you'll also need `scripting`
+- Browsers: Chrome 130+
+- Manifest: v3 (v2 was last supported in `webext-inject-on-install v2.3.0`)
+- Permissions: `scripting`, `storage`, (`tabs` or `host_permissions` that includes all the hosts specified in `content_scripts`)
 - Context: `background`
 
 **Sponsored by [PixieBrix](https://www.pixiebrix.com)** :tada:
