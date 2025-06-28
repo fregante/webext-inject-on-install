@@ -49,7 +49,7 @@ test('css content', async () => {
 	expect(chrome.tabs.insertCSS.mock.lastCall[1]).toMatchSnapshot();
 });
 
-test.only('deferred usage', async () => {
+test('deferred usage', async () => {
 	const contentScript = manifest.content_scripts[0];
 	const scriptableTabs = Array.from({length: 11}).fill(0).map((_, id) => ({
 		id,
