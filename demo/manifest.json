@@ -15,6 +15,10 @@
 		{
 			"matches": ["https://ephiframe.vercel.app/*"],
 			"js": ["content.js"]
+		},
+		{
+			"matches": ["https://ephiframe.vercel.app/*"],
+			"css": ["content.css"]
 		}
 	],
 	"background": {

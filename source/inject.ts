@@ -53,7 +53,6 @@ function onCommitted({tabId, frameId}: {tabId: number; frameId: number}) {
 async function onActivated({tabId}: {tabId: number}) {
 	const key = getTabStorageKey(tabId);
 	const storage = await chrome.storage.session.get(key);
-
 	if (!storage[key]) {
 		return;
 	}
@@ -74,7 +73,7 @@ async function onActivated({tabId}: {tabId: number}) {
 }
 
 export async function injectOneScript(contentScript: ContentScript) {
-	const liveTabs = await chrome.tabs.query({
+	const tabs = await chrome.tabs.query({
 		url: contentScript.matches,
 		discarded: false,
 
@@ -87,7 +86,7 @@ export async function injectOneScript(contentScript: ContentScript) {
 
 	const foregroundTabs: number[] = [];
 	const backgroundTabs: number[] = [];
-	for (const tab of liveTabs) {
+	for (const tab of tabs) {
 		if (!tab.id || !isScriptableUrl(tab.url)) {
 			continue;
 		}

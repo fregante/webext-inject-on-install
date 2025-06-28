@@ -48,11 +48,10 @@
 		"@parcel/config-webextension": "^2.15.4",
 		"@sindresorhus/tsconfig": "^7.0.0",
 		"@types/chrome": "^0.0.326",
-		"@types/sinon-chrome": "^2.2.16",
 		"parcel": "^2.15.4",
-		"sinon-chrome": "^3.0.1",
 		"typescript": "^5.8.3",
 		"vitest": "^3.2.4",
+		"vitest-chrome": "^0.1.0",
 		"xo": "^1.1.1"
 	},
 	"engines": {
