@@ -1,12 +1,12 @@
 import {onExtensionStart} from 'webext-events';
-import injectScripts from './inject.js';
+import registerScripts from './inject.js';
 
 async function register() {
 	const {content_scripts: scripts} = chrome.runtime.getManifest();
 
 	console.debug('webext-inject-on-install: Found', scripts!.length, 'content script(s) in the manifest.');
 
-	await injectScripts(scripts!);
+	await registerScripts(scripts!);
 }
 
 if (globalThis.chrome && !navigator.userAgent.includes('Firefox')) {

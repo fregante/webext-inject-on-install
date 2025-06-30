@@ -3,7 +3,7 @@ import {
 	expect, test, beforeEach, vi,
 } from 'vitest';
 import {chrome} from 'vitest-chrome';
-import {injectOneScript} from './inject.js';
+import {registerOneScript} from './inject.js';
 import manifest from './demo/manifest.json' with {type: 'json'};
 
 beforeEach(() => {
@@ -22,7 +22,7 @@ test('base usage', async () => {
 
 	chrome.tabs.query.mockImplementation(async () => scriptableTabs);
 
-	await injectOneScript(contentScript);
+	await registerOneScript(contentScript);
 	expect(chrome.tabs.executeScript.mock.lastCall[1]).toMatchSnapshot();
 	expect(chrome.tabs.insertCSS.mock.calls.length).toBe(0);
 	expect(chrome.tabs.onUpdated.hasListeners()).toBe(false);
@@ -44,7 +44,7 @@ test('css content', async () => {
 
 	chrome.tabs.query.mockImplementation(async () => scriptableTabs);
 
-	await injectOneScript(contentScript);
+	await registerOneScript(contentScript);
 	expect(chrome.tabs.executeScript.mock.calls.length).toBe(0);
 	expect(chrome.tabs.insertCSS.mock.lastCall[1]).toMatchSnapshot();
 });
@@ -60,7 +60,7 @@ test('deferred usage', async () => {
 
 	chrome.tabs.query.mockImplementation(async () => scriptableTabs);
 
-	await injectOneScript(contentScript);
+	await registerOneScript(contentScript);
 
 	// Ensure no injections were made because no matching tabs were found
 	expect(chrome.tabs.executeScript.mock.calls.length).toBe(0);

@@ -1,5 +1,8 @@
 import {injectContentScript, isScriptableUrl} from 'webext-content-scripts';
 import {doesUrlMatchPatterns} from 'webext-patterns';
+import {
+	getTabStorageKey, getTabsWaitingForInjection, ignoredTabs, isTabWaitingForInjection,
+} from './storage.js';
 
 const errorEnterprisePolicy = 'This page cannot be scripted due to an ExtensionsSettings policy.';
 
@@ -17,17 +20,22 @@ const injectAndDiscardCertainErrors: typeof injectContentScript = async (tabId, 
 	}
 };
 
-const storageKeyRoot = 'webext-inject-on-install:';
-
-function getTabStorageKey(tabId: number) {
-	return `${storageKeyRoot}${tabId}`;
-}
+let clearingRequested = false;
 
 async function forgetTab(tabId: number) {
+	ignoredTabs.add(tabId);
 	await chrome.storage.session.remove(getTabStorageKey(tabId));
-	const fullStorage = await chrome.storage.session.getKeys();
-	const tracked = fullStorage.filter(key => key.startsWith(storageKeyRoot)).length;
-	if (tracked === 0) {
+	if (!clearingRequested) {
+		clearingRequested = true;
+		requestIdleCallback(removeListenersWhenDone);
+	}
+}
+
+async function removeListenersWhenDone() {
+	clearingRequested = false;
+
+	const tracked = await getTabsWaitingForInjection();
+	if (tracked.length === 0) {
 		console.debug('webext-inject-on-install: no tabs remaining. Unloading');
 		chrome.tabs.onRemoved.removeListener(forgetTab);
 		chrome.tabs.onUpdated.removeListener(onUpdated);
@@ -51,28 +59,38 @@ function onCommitted({tabId, frameId}: {tabId: number; frameId: number}) {
 }
 
 async function onActivated({tabId}: {tabId: number}) {
-	const key = getTabStorageKey(tabId);
-	const storage = await chrome.storage.session.get(key);
-	if (!storage[key]) {
+	if (ignoredTabs.has(tabId) || (!await isTabWaitingForInjection(tabId))) {
 		return;
 	}
 
-	await forgetTab(tabId);
+	void forgetTab(tabId);
 
-	const tab = await chrome.tabs.get(tabId);
-	const scripts = chrome.runtime.getManifest().content_scripts!;
-	console.group('webext-inject-on-install: deferred injections for', tabId);
-	for (const script of scripts) {
-		if (tab.url && script.matches && doesUrlMatchPatterns(tab.url, ...script.matches)) {
-			console.debug(script);
-			void injectAndDiscardCertainErrors(tabId, script);
-		}
-	}
-
-	console.groupEnd();
+	await injectRegisteredScripts(tabId);
 }
 
-export async function injectOneScript(contentScript: ContentScript) {
+async function injectRegisteredScripts(tabId: number) {
+	ignoredTabs.add(tabId);
+	const {url} = await chrome.tabs.get(tabId);
+	if (!url) {
+		return;
+	}
+
+	const scripts = chrome.runtime.getManifest().content_scripts!;
+	console.group('webext-inject-on-install: deferred injections for', tabId);
+	const promises = scripts.map(async script => {
+		if (script.matches && doesUrlMatchPatterns(url, ...script.matches)) {
+			console.debug(script);
+			await injectAndDiscardCertainErrors(tabId, script);
+		}
+	});
+
+	console.groupEnd();
+
+	// Await after group so that all logs are grouped
+	await Promise.allSettled(promises);
+}
+
+export async function registerOneScript(contentScript: ContentScript) {
 	const tabs = await chrome.tabs.query({
 		url: contentScript.matches,
 		discarded: false,
@@ -129,6 +147,6 @@ export async function injectOneScript(contentScript: ContentScript) {
 	console.groupEnd();
 }
 
-export default async function injectScripts(contentScripts: ContentScript[]) {
-	await Promise.allSettled(contentScripts.map(async script => injectOneScript(script)));
+export default async function registerScripts(contentScripts: ContentScript[]) {
+	await Promise.allSettled(contentScripts.map(async script => registerOneScript(script)));
 }
