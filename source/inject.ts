@@ -25,7 +25,7 @@ const injectAndDiscardCertainErrors: typeof injectContentScript = async (tabId, 
 
 async function forgetTab(tabId: number) {
 	await removeTabFromWaitingList(tabId);
-	await removeListenersIfDone()
+	await removeListenersIfDone();
 }
 
 function onUpdated(tabId: number, changeInfo: {discarded?: boolean}) {

@@ -7,7 +7,7 @@
 
 > Automatically add content scripts to existing tabs when your extension is installed.
 
-Safari and Firefox actually already does this natively, so this module is automatically disabled there.
+Safari and Firefox actually already do this natively, so this module is automatically disabled there.
 
 - Browsers: Chrome 130+
 - Manifest: v3 (v2 was last supported in `webext-inject-on-install v2.3.0`)

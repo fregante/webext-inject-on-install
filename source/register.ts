@@ -9,7 +9,7 @@ async function register() {
 	await registerScripts(scripts!);
 }
 
-if (globalThis.chrome && !navigator.userAgent.includes('Firefox')) {
+if (globalThis.chrome && navigator.userAgent.includes('Chrome')) {
 	const manifest = chrome.runtime.getManifest();
 
 	if (!manifest.content_scripts?.length) {
