@@ -3,6 +3,7 @@ import {doesUrlMatchPatterns} from 'webext-patterns';
 import {
 	addTabsToWaitingList,
 	getTabsWaitingForInjection,
+	ignoredTabs,
 	isTabWaitingForInjection,
 	removeTabFromWaitingList,
 } from './storage.js';
@@ -67,6 +68,11 @@ async function removeListenersIfDone() {
 }
 
 async function injectRegisteredScripts(tabId: number) {
+	if (ignoredTabs.has(tabId)) {
+		// Last-moment check to avoid race conditions
+		return;
+	}
+
 	void forgetTab(tabId);
 
 	const {url} = await chrome.tabs.get(tabId);

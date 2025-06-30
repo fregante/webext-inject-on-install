@@ -5,8 +5,8 @@ export async function getTabsWaitingForInjection(): Promise<number[]> {
 		.map(key => Number(key.slice(storageKeyRoot.length)));
 }
 
-export const storageKeyRoot = 'webext-inject-on-install:';
-export function getTabStorageKey(tabId: number) {
+const storageKeyRoot = 'webext-inject-on-install:';
+function getTabStorageKey(tabId: number) {
 	return `${storageKeyRoot}${tabId}`;
 }
 
