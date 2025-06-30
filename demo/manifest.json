@@ -1,20 +1,28 @@
 {
 	"$schema": "https://json.schemastore.org/chrome-manifest",
 	"name": "webext-inject-on-install",
-	"manifest_version": 2,
+	"manifest_version": 3,
 	"version": "1.0.0",
 	"description": "Injects a script into the page when the extension is installed.",
 	"permissions": [
-		"tabs",
+		"storage",
+		"scripting"
+	],
+	"host_permissions": [
 		"https://ephiframe.vercel.app/*"
 	],
 	"content_scripts": [
 		{
 			"matches": ["https://ephiframe.vercel.app/*"],
 			"js": ["content.js"]
+		},
+		{
+			"matches": ["https://ephiframe.vercel.app/*"],
+			"css": ["content.css"]
 		}
 	],
 	"background": {
-		"scripts": ["background.js"]
+		"service_worker": "background.js",
+		"type": "module"
 	}
 }

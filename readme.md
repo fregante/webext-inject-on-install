@@ -7,11 +7,11 @@
 
 > Automatically add content scripts to existing tabs when your extension is installed.
 
-Firefox actually already does this natively, so this module is automatically disabled there.
+Safari and Firefox actually already do this natively, so this module is automatically disabled there.
 
-- Browsers: Chrome, Firefox, and Safari
-- Manifest: v2 and v3
-- Permissions: `tabs` + explicit host permissions in `permissions`; in Manifest v3 you'll also need `scripting`
+- Browsers: Chrome 130+
+- Manifest: v3 (v2 was last supported in `webext-inject-on-install v2.3.0`)
+- Permissions: `scripting`, `storage`, (`tabs` or `host_permissions` that includes all the hosts specified in `content_scripts`)
 - Context: `background`
 
 **Sponsored by [PixieBrix](https://www.pixiebrix.com)** :tada:
@@ -36,8 +36,9 @@ import "webext-inject-on-install";
 
 1. It gets the list of content scripts from the manifest
 2. For each content script group, it looks for open tabs that are not discarded (discarded tabs are already handled by the browser)
-3. It injects the script into the tabs matching the `matches` patterns (`exclude_matches` is not supported https://github.com/fregante/webext-inject-on-install/issues/5)
-4. If the tab count exceeds 10 (each), it injects into the tabs only when they become active. (persistent background pages only https://github.com/fregante/webext-inject-on-install/issues/4)
+3. It injects the scripts into the *focused* tabs matching the `matches` patterns (`exclude_matches` is not supported https://github.com/fregante/webext-inject-on-install/issues/5)
+4. The remaining tabs are tracked and they receive the applicable scripts when they're activated.
+5. Once the list of tracked tabs is empty, the listeners are removed.
 
 ## Related
 
