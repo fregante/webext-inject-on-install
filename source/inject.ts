@@ -1,7 +1,10 @@
 import {injectContentScript, isScriptableUrl} from 'webext-content-scripts';
 import {doesUrlMatchPatterns} from 'webext-patterns';
 import {
-	getTabStorageKey, getTabsWaitingForInjection, ignoredTabs, isTabWaitingForInjection,
+	addTabsToWaitingList,
+	getTabsWaitingForInjection,
+	isTabWaitingForInjection,
+	removeTabFromWaitingList,
 } from './storage.js';
 
 const errorEnterprisePolicy = 'This page cannot be scripted due to an ExtensionsSettings policy.';
@@ -23,12 +26,36 @@ const injectAndDiscardCertainErrors: typeof injectContentScript = async (tabId, 
 let clearingRequested = false;
 
 async function forgetTab(tabId: number) {
-	ignoredTabs.add(tabId);
-	await chrome.storage.session.remove(getTabStorageKey(tabId));
+	await removeTabFromWaitingList(tabId);
 	if (!clearingRequested) {
 		clearingRequested = true;
 		requestIdleCallback(removeListenersWhenDone);
 	}
+}
+
+function onUpdated(tabId: number, changeInfo: {discarded?: boolean}) {
+	if (changeInfo.discarded) {
+		void forgetTab(tabId);
+	}
+}
+
+function onCommitted({tabId, frameId}: {tabId: number; frameId: number}) {
+	if (frameId === 0) {
+		void forgetTab(tabId);
+	}
+}
+
+async function onActivated({tabId}: {tabId: number}) {
+	if (await isTabWaitingForInjection(tabId)) {
+		await injectRegisteredScripts(tabId);
+	}
+}
+
+function addListeners() {
+	chrome.tabs.onRemoved.addListener(forgetTab);
+	chrome.tabs.onUpdated.addListener(onUpdated);
+	chrome.tabs.onActivated.addListener(onActivated);
+	chrome.webNavigation?.onCommitted.addListener(onCommitted);
 }
 
 async function removeListenersWhenDone() {
@@ -46,30 +73,9 @@ async function removeListenersWhenDone() {
 	}
 }
 
-function onUpdated(tabId: number, changeInfo: {discarded?: boolean}) {
-	if (changeInfo.discarded) {
-		void forgetTab(tabId);
-	}
-}
-
-function onCommitted({tabId, frameId}: {tabId: number; frameId: number}) {
-	if (frameId === 0) {
-		void forgetTab(tabId);
-	}
-}
-
-async function onActivated({tabId}: {tabId: number}) {
-	if (ignoredTabs.has(tabId) || (!await isTabWaitingForInjection(tabId))) {
-		return;
-	}
-
+async function injectRegisteredScripts(tabId: number) {
 	void forgetTab(tabId);
 
-	await injectRegisteredScripts(tabId);
-}
-
-async function injectRegisteredScripts(tabId: number) {
-	ignoredTabs.add(tabId);
 	const {url} = await chrome.tabs.get(tabId);
 	if (!url) {
 		return;
@@ -132,15 +138,8 @@ export async function registerOneScript(contentScript: ContentScript) {
 
 	if (backgroundTabs.length > 0) {
 		console.debug('Background tabs:', ...backgroundTabs);
-		// Register listeners
-		chrome.tabs.onRemoved.addListener(forgetTab);
-		chrome.tabs.onUpdated.addListener(onUpdated);
-		chrome.tabs.onActivated.addListener(onActivated);
-		chrome.webNavigation?.onCommitted.addListener(onCommitted);
-
-		// Keep track of them
-		const entries = backgroundTabs.map(tabId => [getTabStorageKey(tabId), true] as const);
-		void chrome.storage.session.set(Object.fromEntries(entries));
+		addListeners();
+		void addTabsToWaitingList(backgroundTabs);
 	}
 
 	// Warning: If there's any `await` before this, the grouping will be broken

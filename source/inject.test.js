@@ -1,15 +1,15 @@
-
 import {
 	expect, test, beforeEach, vi,
 } from 'vitest';
 import {chrome} from 'vitest-chrome';
+import manifest from '../demo/manifest.json' with {type: 'json'};
 import {registerOneScript} from './inject.js';
-import manifest from './demo/manifest.json' with {type: 'json'};
 
 beforeEach(() => {
 	vi.clearAllMocks();
 	chrome.runtime.getManifest.mockReturnValue(manifest);
 	chrome.storage.session.get.mockResolvedValue({});
+	globalThis.requestIdleCallback = vi.fn(setTimeout);
 });
 
 test('base usage', async () => {
