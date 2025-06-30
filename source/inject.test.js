@@ -9,7 +9,6 @@ beforeEach(() => {
 	vi.clearAllMocks();
 	chrome.runtime.getManifest.mockReturnValue(manifest);
 	chrome.storage.session.get.mockResolvedValue({});
-	globalThis.requestIdleCallback = vi.fn(setTimeout);
 });
 
 test('base usage', async () => {

@@ -23,14 +23,9 @@ const injectAndDiscardCertainErrors: typeof injectContentScript = async (tabId, 
 	}
 };
 
-let clearingRequested = false;
-
 async function forgetTab(tabId: number) {
 	await removeTabFromWaitingList(tabId);
-	if (!clearingRequested) {
-		clearingRequested = true;
-		requestIdleCallback(removeListenersWhenDone);
-	}
+	await removeListenersIfDone()
 }
 
 function onUpdated(tabId: number, changeInfo: {discarded?: boolean}) {
@@ -58,9 +53,7 @@ function addListeners() {
 	chrome.webNavigation?.onCommitted.addListener(onCommitted);
 }
 
-async function removeListenersWhenDone() {
-	clearingRequested = false;
-
+async function removeListenersIfDone() {
 	const tracked = await getTabsWaitingForInjection();
 	if (tracked.length === 0) {
 		console.debug('webext-inject-on-install: no tabs remaining. Unloading');
