@@ -1,5 +1,8 @@
 import {
-	expect, test, beforeEach, vi,
+	expect,
+	test,
+	beforeEach,
+	vi,
 } from 'vitest';
 import {chrome} from 'vitest-chrome';
 import manifest from '../demo/manifest.json' with {type: 'json'};
@@ -50,7 +53,7 @@ test('css content', async () => {
 
 test('deferred usage', async () => {
 	const contentScript = manifest.content_scripts[0];
-	const scriptableTabs = Array.from({length: 11}).fill(0).map((_, id) => ({
+	const scriptableTabs = Array.from({length: 11}, (_, id) => ({
 		id,
 		url: `https://ephiframe.vercel.app/${id}`,
 		discarded: false,

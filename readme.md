@@ -2,9 +2,6 @@
 
 <!-- [![][badge-gzip]][link-bundlephobia] Disabled until https://github.com/pastelsky/bundlephobia/issues/379 -->
 
-[badge-gzip]: https://img.shields.io/bundlephobia/minzip/webext-inject-on-install.svg?label=gzipped
-[link-bundlephobia]: https://bundlephobia.com/result?p=webext-inject-on-install
-
 > Automatically add content scripts to existing tabs when your extension is installed.
 
 Safari and Firefox actually already do this natively, so this module is automatically disabled there.

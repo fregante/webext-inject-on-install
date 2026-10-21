@@ -1,6 +1,5 @@
 import {defineConfig} from 'vitest/config';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call -- Wrong
 export default defineConfig({
 	test: {
 		silent: 'passed-only',
