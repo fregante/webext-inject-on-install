@@ -33,7 +33,7 @@ jobs:
         with:
           node-version-file: package.json
       - run: npm ci
-      - run: npm run prepack
+      - run: npm run build
 
   Demo:
     runs-on: ubuntu-latest
