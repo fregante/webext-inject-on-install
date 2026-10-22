@@ -31,7 +31,7 @@
 		"build": "tsc",
 		"demo:build": "parcel build --no-cache",
 		"demo:watch": "parcel watch --no-cache --no-hmr",
-		"prepack": "tsc --sourceMap false",
+		"prepare": "tsc --sourceMap false",
 		"test": "tsc --noEmit && xo && npm run test:vitest",
 		"test:vitest": "vitest run",
 		"watch": "tsc --watch"
@@ -50,8 +50,8 @@
 		"inject"
 	],
 	"dependencies": {
-		"webext-content-scripts": "^2.8.0",
-		"webext-events": "^3.1.1",
+		"webext-content-scripts": "^3.0.0",
+		"webext-events": "^4.0.0",
 		"webext-patterns": "^3.0.0"
 	},
 	"devDependencies": {

@@ -6,3 +6,9 @@ globalThis.chrome = chrome;
 
 chrome.storage.session = chrome.storage.local;
 chrome.storage.session.getKeys = vi.fn(() => []);
+
+// `vitest-chrome` doesn't mock `chrome.scripting`
+chrome.scripting = {
+	executeScript: vi.fn(async () => []),
+	insertCSS: vi.fn(async () => undefined),
+};

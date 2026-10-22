@@ -1,4 +1,4 @@
-import {onExtensionStart} from 'webext-events';
+import onExtensionStart from 'webext-events/on-extension-start';
 import registerScripts from './inject.js';
 
 async function register() {
