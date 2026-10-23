@@ -16,7 +16,7 @@
 			"types": "./distribution/register.d.ts",
 			"default": "./distribution/register.js"
 		},
-		"./inject": {
+		"./inject.js": {
 			"types": "./distribution/inject.d.ts",
 			"default": "./distribution/inject.js"
 		}

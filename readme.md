@@ -26,7 +26,7 @@ Or download the [standalone bundle](https://bundle.fregante.com/?pkg=webext-inje
 It registers automatically:
 
 ```js
-import "webext-inject-on-install";
+import "webext-inject-on-install/register";
 ```
 
 ## How it works
