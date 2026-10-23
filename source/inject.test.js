@@ -1,5 +1,8 @@
 import {
-	expect, test, beforeEach, vi,
+	expect,
+	test,
+	beforeEach,
+	vi,
 } from 'vitest';
 import {chrome} from 'vitest-chrome';
 import manifest from '../demo/manifest.json' with {type: 'json'};
@@ -22,8 +25,8 @@ test('base usage', async () => {
 	chrome.tabs.query.mockImplementation(async () => scriptableTabs);
 
 	await registerOneScript(contentScript);
-	expect(chrome.tabs.executeScript.mock.lastCall[1]).toMatchSnapshot();
-	expect(chrome.tabs.insertCSS.mock.calls.length).toBe(0);
+	expect(chrome.scripting.executeScript.mock.lastCall[0]).toMatchSnapshot();
+	expect(chrome.scripting.insertCSS.mock.calls.length).toBe(0);
 	expect(chrome.tabs.onUpdated.hasListeners()).toBe(false);
 	expect(chrome.tabs.onUpdated.hasListeners()).toBe(false);
 	expect(chrome.tabs.onRemoved.hasListeners()).toBe(false);
@@ -44,13 +47,13 @@ test('css content', async () => {
 	chrome.tabs.query.mockImplementation(async () => scriptableTabs);
 
 	await registerOneScript(contentScript);
-	expect(chrome.tabs.executeScript.mock.calls.length).toBe(0);
-	expect(chrome.tabs.insertCSS.mock.lastCall[1]).toMatchSnapshot();
+	expect(chrome.scripting.executeScript.mock.calls.length).toBe(0);
+	expect(chrome.scripting.insertCSS.mock.lastCall[0]).toMatchSnapshot();
 });
 
 test('deferred usage', async () => {
 	const contentScript = manifest.content_scripts[0];
-	const scriptableTabs = Array.from({length: 11}).fill(0).map((_, id) => ({
+	const scriptableTabs = Array.from({length: 11}, (_, id) => ({
 		id,
 		url: `https://ephiframe.vercel.app/${id}`,
 		discarded: false,
@@ -62,8 +65,8 @@ test('deferred usage', async () => {
 	await registerOneScript(contentScript);
 
 	// Ensure no injections were made because no matching tabs were found
-	expect(chrome.tabs.executeScript.mock.calls.length).toBe(0);
-	expect(chrome.tabs.insertCSS.mock.calls.length).toBe(0);
+	expect(chrome.scripting.executeScript.mock.calls.length).toBe(0);
+	expect(chrome.scripting.insertCSS.mock.calls.length).toBe(0);
 	expect(chrome.tabs.onUpdated.hasListeners()).toBe(true);
 	expect(chrome.tabs.onRemoved.hasListeners()).toBe(true);
 	expect(chrome.tabs.onActivated.hasListeners()).toBe(true);
@@ -90,17 +93,17 @@ test('deferred usage', async () => {
 	// TODO: Mocking library is incomplete, not worth continuing
 	// await Promise.resolve();
 	// expect(chrome.storage.session.remove.mock.calls.length).toBe(5);
-	// expect(chrome.tabs.executeScript.mock.calls.length).toBe(2);
-	// expect(chrome.tabs.insertCSS.mock.calls.length).toBe(1);
-	// expect(chrome.tabs.executeScript.mock.calls).toMatchSnapshot();
-	// expect(chrome.tabs.insertCSS.mock.calls).toMatchSnapshot();
+	// expect(chrome.scripting.executeScript.mock.calls.length).toBe(2);
+	// expect(chrome.scripting.insertCSS.mock.calls.length).toBe(1);
+	// expect(chrome.scripting.executeScript.mock.calls).toMatchSnapshot();
+	// expect(chrome.scripting.insertCSS.mock.calls).toMatchSnapshot();
 
 	// // Ensure that navigation away removes the tab without injecting the script
 	// chrome.webNavigation.onCommitted.callListeners({tabId: 6, frameId: 2});
 	// expect(chrome.storage.session.remove.mock.calls.length).toBe(6);
 	// chrome.webNavigation.onCommitted.callListeners({tabId: 6, frameId: 0});
 	// expect(chrome.storage.session.remove.mock.calls.length).toBe(5);
-	// expect(chrome.tabs.executeScript.mock.calls.length).toBe(2);
+	// expect(chrome.scripting.executeScript.mock.calls.length).toBe(2);
 
 	// // Ensure that the listeners are removed once the list is empty
 	// expect(chrome.tabs.onUpdated.removeListener.mock.calls.length).toBe(0);

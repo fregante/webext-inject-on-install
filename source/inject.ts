@@ -1,5 +1,5 @@
 import {injectContentScript, isScriptableUrl} from 'webext-content-scripts';
-import {doesUrlMatchPatterns} from 'webext-patterns';
+import {testPatterns} from 'webext-patterns';
 import {
 	addTabsToWaitingList,
 	getTabsWaitingForInjection,
@@ -41,14 +41,22 @@ function onCommitted({tabId, frameId}: {tabId: number; frameId: number}) {
 	}
 }
 
-async function onActivated({tabId}: {tabId: number}) {
+async function injectIfWaiting({tabId}: {tabId: number}) {
 	if (await isTabWaitingForInjection(tabId)) {
 		await injectRegisteredScripts(tabId);
 	}
 }
 
+function onRemoved(tabId: number) {
+	void forgetTab(tabId);
+}
+
+function onActivated(activeInfo: {tabId: number}) {
+	void injectIfWaiting(activeInfo);
+}
+
 function addListeners() {
-	chrome.tabs.onRemoved.addListener(forgetTab);
+	chrome.tabs.onRemoved.addListener(onRemoved);
 	chrome.tabs.onUpdated.addListener(onUpdated);
 	chrome.tabs.onActivated.addListener(onActivated);
 	chrome.webNavigation?.onCommitted.addListener(onCommitted);
@@ -58,7 +66,7 @@ async function removeListenersIfDone() {
 	const tracked = await getTabsWaitingForInjection();
 	if (tracked.length === 0) {
 		console.debug('webext-inject-on-install: no tabs remaining. Unloading');
-		chrome.tabs.onRemoved.removeListener(forgetTab);
+		chrome.tabs.onRemoved.removeListener(onRemoved);
 		chrome.tabs.onUpdated.removeListener(onUpdated);
 		chrome.tabs.onActivated.removeListener(onActivated);
 		chrome.webNavigation?.onCommitted.removeListener(onCommitted);
@@ -76,17 +84,19 @@ async function injectRegisteredScripts(tabId: number) {
 	void forgetTab(tabId);
 
 	const {url} = await chrome.tabs.get(tabId);
-	if (!url) {
+	if (url === undefined || url === '') {
 		return;
 	}
 
 	const scripts = chrome.runtime.getManifest().content_scripts!;
 	console.group('webext-inject-on-install: deferred injections for', tabId);
 	const promises = scripts.map(async script => {
-		if (script.matches && doesUrlMatchPatterns(url, ...script.matches)) {
-			console.debug(script);
-			await injectAndDiscardCertainErrors(tabId, script);
+		if (!(script.matches && testPatterns(url, script.matches))) {
+			return;
 		}
+
+		console.debug(script);
+		await injectAndDiscardCertainErrors(tabId, script);
 	});
 
 	console.groupEnd();
@@ -110,7 +120,7 @@ export async function registerOneScript(contentScript: ContentScript) {
 	const foregroundTabs: number[] = [];
 	const backgroundTabs: number[] = [];
 	for (const tab of tabs) {
-		if (!tab.id || !isScriptableUrl(tab.url)) {
+		if (tab.id === undefined || !isScriptableUrl(tab.url)) {
 			continue;
 		}
 

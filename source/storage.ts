@@ -17,7 +17,7 @@ export async function isTabWaitingForInjection(tabId: number) {
 
 	const key = getTabStorageKey(tabId);
 	const storage = await chrome.storage.session.get(key);
-	return key in storage;
+	return Object.hasOwn(storage, key);
 }
 
 // Local synchronous optimization to avoid multiple requests for the same tab

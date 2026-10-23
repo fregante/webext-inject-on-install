@@ -2,6 +2,43 @@
 	"name": "webext-inject-on-install",
 	"version": "3.0.0-2",
 	"description": "Automatically add content scripts to existing tabs when your extension is installed",
+	"license": "MIT",
+	"repository": "fregante/webext-inject-on-install",
+	"funding": "https://github.com/sponsors/fregante",
+	"author": "Federico Brigante <me@fregante.com> (https://fregante.com)",
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./distribution/register.d.ts",
+			"default": "./distribution/register.js"
+		},
+		"./register": {
+			"types": "./distribution/register.d.ts",
+			"default": "./distribution/register.js"
+		},
+		"./inject.js": {
+			"types": "./distribution/inject.d.ts",
+			"default": "./distribution/inject.js"
+		}
+	},
+	"sideEffects": [
+		"./distribution/register.js"
+	],
+	"engines": {
+		"node": ">=24"
+	},
+	"scripts": {
+		"build": "tsc",
+		"demo:build": "parcel build --no-cache",
+		"demo:watch": "parcel watch --no-cache --no-hmr",
+		"prepare": "tsc --sourceMap false",
+		"test": "tsc --noEmit && xo && npm run test:vitest",
+		"test:vitest": "vitest run",
+		"watch": "tsc --watch"
+	},
+	"files": [
+		"distribution"
+	],
 	"keywords": [
 		"browser",
 		"content script",
@@ -12,50 +49,21 @@
 		"safari",
 		"inject"
 	],
-	"repository": "fregante/webext-inject-on-install",
-	"funding": "https://github.com/sponsors/fregante",
-	"license": "MIT",
-	"author": "Federico Brigante <me@fregante.com> (https://fregante.com)",
-	"type": "module",
-	"exports": {
-		".": "./distribution/register.js",
-		"./register": "./distribution/register.js",
-		"./inject.js": "./distribution/inject.js"
-	},
-	"files": [
-		"distribution"
-	],
-	"scripts": {
-		"build": "tsc",
-		"demo:build": "parcel build --no-cache",
-		"demo:watch": "parcel watch --no-cache --no-hmr",
-		"prepack": "tsc --sourceMap false",
-		"test": "tsc --noEmit && xo && npm run test:vitest",
-		"test:vitest": "vitest run",
-		"watch": "tsc --watch"
-	},
-	"xo": {
-		"rules": {
-			"unicorn/prefer-top-level-await": "off"
-		}
-	},
 	"dependencies": {
-		"webext-content-scripts": "^2.7.2",
-		"webext-events": "^3.1.1",
-		"webext-patterns": "^1.5.0"
+		"webext-content-scripts": "^3.0.0",
+		"webext-events": "^4.0.0",
+		"webext-patterns": "^3.0.0"
 	},
 	"devDependencies": {
-		"@parcel/config-webextension": "^2.15.4",
-		"@sindresorhus/tsconfig": "^7.0.0",
-		"@types/chrome": "^0.0.326",
-		"parcel": "^2.15.4",
-		"typescript": "^5.8.3",
-		"vitest": "^3.2.4",
+		"@parcel/config-webextension": "^2.16.4",
+		"@sindresorhus/tsconfig": "^8.1.0",
+		"@types/chrome": "^0.3.6",
+		"globals": "^17.13.0",
+		"parcel": "^2.16.4",
+		"typescript": "^6.0.3",
+		"vitest": "^5.0.5",
 		"vitest-chrome": "^0.1.0",
-		"xo": "^1.1.1"
-	},
-	"engines": {
-		"node": ">=18"
+		"xo": "^5.0.1"
 	},
 	"targets": {
 		"main": false,
@@ -89,5 +97,8 @@
 				"https://alt-ephiframe.vercel.app"
 			]
 		}
+	},
+	"@parcel/resolver-default": {
+		"packageExports": true
 	}
 }

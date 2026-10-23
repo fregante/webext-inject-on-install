@@ -1,4 +1,4 @@
-import {onExtensionStart} from 'webext-events';
+import onExtensionStart from 'webext-events/on-extension-start';
 import registerScripts from './inject.js';
 
 async function register() {
@@ -9,18 +9,18 @@ async function register() {
 	await registerScripts(scripts!);
 }
 
-if (globalThis.chrome && navigator.userAgent.includes('Chrome')) {
-	const manifest = chrome.runtime.getManifest();
+if (globalThis.chrome !== undefined && navigator.userAgent.includes('Chrome')) {
+	const manifest = chrome.runtime.getManifest() as chrome.runtime.ManifestV3;
 
-	if (!manifest.content_scripts?.length) {
+	if ((manifest.content_scripts?.length ?? 0) === 0) {
 		throw new Error('webext-inject-on-install tried to inject content scripts, but no content scripts were found in the manifest');
 	}
 
-	if (!chrome.storage?.session || !chrome.scripting) {
+	if (chrome.storage?.session === undefined || chrome.scripting === undefined) {
 		throw new Error('webext-inject-on-install requires the "storage" and "scripting" permissions');
 	}
 
-	if (!manifest.host_permissions?.length && !manifest.permissions?.includes('tabs')) {
+	if ((manifest.host_permissions?.length ?? 0) === 0 && !manifest.permissions?.includes('tabs')) {
 		throw new Error('webext-inject-on-install requires either the "tabs" permission or some hosts in "host_permissions"');
 	}
 

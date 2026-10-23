@@ -2,21 +2,29 @@
 
 exports[`base usage 1`] = `
 {
-  "allFrames": false,
-  "file": "content.js",
-  "frameId": 0,
-  "matchAboutBlank": undefined,
-  "runAt": undefined,
+  "files": [
+    "content.js",
+  ],
+  "target": {
+    "frameIds": [
+      0,
+    ],
+    "tabId": 1,
+  },
 }
 `;
 
 exports[`css content 1`] = `
 {
-  "allFrames": false,
-  "file": "content.css",
-  "frameId": 0,
-  "matchAboutBlank": undefined,
-  "runAt": "document_start",
+  "files": [
+    "content.css",
+  ],
+  "target": {
+    "frameIds": [
+      0,
+    ],
+    "tabId": 1,
+  },
 }
 `;
 
